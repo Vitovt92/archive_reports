@@ -1,23 +1,33 @@
 #!/bin/bash
 
-# save checksum
-
+# configure target files
+# file where to write daily notes
+DAILY_NOTES_FILE=./daily_notes.txt
+# file where to store all daily notes
+ARCHIVE_NOTES_FILE=./archive_notes.txt 
+# file with last checksum of DAILY_NOTES_FILE
+DAILY_NOTES_CHECKSUM_FILE=./daily_notes_CHECKSUM 
+# How many hours wait after last modification until rewrite checkcum and put notes to archive 
+DIF_TIME=22
+# time now. In seconds since 1970
 NOW_TIME=$(date +%s)
-MODIF_TIME=$(stat --format=%Y daily_notes.txt)
-DIF_TIME=24
+# time when notes file have being modified last time
+MODIF_TIME=$(stat --format=%Y $DAILY_NOTES_FILE)
+#convert DIF_TIME to seconds
 DIF_TIME_SEC=$(expr $DIF_TIME \* 60 \* 60 )
-echo $MODIF_TIME
 
-if ! $(sha256sum --status -c ./daily_notes_CHECKSUM)
+ echo $(sha256sum -c $DAILY_NOTES_CHECKSUM_FILE) 
+ echo " $(date -d@$( expr $DIF_TIME_SEC - $(expr $NOW_TIME - $MODIF_TIME)) -u +%H:%M:%S)  "
+
+if  [ $(expr $NOW_TIME - $MODIF_TIME) -gt $DIF_TIME ] &&  ! $(sha256sum --status -c $DAILY_NOTES_CHECKSUM_FILE) 
+#if   ! $(sha256sum --status -c $DAILY_NOTES_CHECKSUM_FILE) 
 then 
 	echo "CHECKSUM doesn't match"
-	if [ $(expr $NOW_TIME - $MODIF_TIME) -gt $DIF_TIME ]
-	then
+#if [ $(expr $NOW_TIME - $MODIF_TIME) -gt $DIF_TIME ]
+	#then
 		echo "time more than $DIF_TIME hours"
-		echo "------------------------" >> ./archive_notes.txt 
-		cat ./daily_notes.txt >> ./archive_notes.txt
-		sha256sum ./daily_notes.txt > ./daily_notes_CHECKSUM 
-	fi  
+		echo "------------ $(date) ------------" >> $ARCHIVE_NOTES_FILE 
+		cat $DAILY_NOTES_FILE >> $ARCHIVE_NOTES_FILE
+		sha256sum $DAILY_NOTES_FILE > $DAILY_NOTES_CHECKSUM_FILE 
+#	fi  
 fi
-#chesk chesksum
-echo $(sha256sum --status -c ./daily_notes_CHECKSUM) 
