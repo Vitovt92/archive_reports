@@ -23,7 +23,7 @@ MODIF_TIME=$(stat --format=%Y $DAILY_NOTES_FILE)
 #convert DIF_TIME to seconds
 DIF_TIME_SEC=$(expr $DIF_TIME \* 60 \* 60 )
 
-if  [ $(expr $NOW_TIME - $MODIF_TIME) -gt $DIF_TIME ] &&  ! $(sha256sum --status -c $DAILY_NOTES_CHECKSUM_FILE) 
+if  [ $(expr $NOW_TIME - $MODIF_TIME) -gt $DIF_TIME_SEC ] &&  ! $(sha256sum --status -c $DAILY_NOTES_CHECKSUM_FILE) 
 then 
 	echo "Archive notes"
 	echo "------------ $(date) ------------" >> $ARCHIVE_NOTES_FILE 
