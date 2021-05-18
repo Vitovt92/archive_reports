@@ -23,18 +23,14 @@ MODIF_TIME=$(stat --format=%Y $DAILY_NOTES_FILE)
 #convert DIF_TIME to seconds
 DIF_TIME_SEC=$(expr $DIF_TIME \* 60 \* 60 )
 
- echo $(sha256sum -c $DAILY_NOTES_CHECKSUM_FILE) 
- echo " $(date -d@$( expr $DIF_TIME_SEC - $(expr $NOW_TIME - $MODIF_TIME)) -u +%H:%M:%S) left for   "
-
 if  [ $(expr $NOW_TIME - $MODIF_TIME) -gt $DIF_TIME ] &&  ! $(sha256sum --status -c $DAILY_NOTES_CHECKSUM_FILE) 
-#if   ! $(sha256sum --status -c $DAILY_NOTES_CHECKSUM_FILE) 
 then 
-	echo "CHECKSUM doesn't match"
-#if [ $(expr $NOW_TIME - $MODIF_TIME) -gt $DIF_TIME ]
-	#then
-		echo "time more than $DIF_TIME hours"
-		echo "------------ $(date) ------------" >> $ARCHIVE_NOTES_FILE 
-		cat $DAILY_NOTES_FILE >> $ARCHIVE_NOTES_FILE
-		sha256sum $DAILY_NOTES_FILE > $DAILY_NOTES_CHECKSUM_FILE 
-#	fi  
+	echo "Archive notes"
+	echo "------------ $(date) ------------" >> $ARCHIVE_NOTES_FILE 
+	cat $DAILY_NOTES_FILE >> $ARCHIVE_NOTES_FILE
+	sha256sum $DAILY_NOTES_FILE > $DAILY_NOTES_CHECKSUM_FILE 
+else
+	echo "Nothing happend"
 fi
+
+
