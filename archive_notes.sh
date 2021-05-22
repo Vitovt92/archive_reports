@@ -13,7 +13,7 @@ else
 fi
 
 # file with last checksum of DAILY_NOTES_FILE
-DAILY_NOTES_CHECKSUM_FILE=./daily_notes_CHECKSUM 
+DAILY_NOTES_CHECKSUM_FILE=./daily_notes_checksum 
 # How many hours wait after last modification until rewrite checkcum and put notes to archive 
 DIF_TIME=22
 # time now. In seconds since 1970
