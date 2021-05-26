@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # configure target files
-if [ -e arch.conf ]
+if [ -e ./arch.conf ]
 then
   # file where to write daily notes
   DAILY_NOTES_FILE=` grep DAILY_NOTES_FILE arch.conf | cut -d '=' -f2 `
   # file where to store all daily notes
   ARCHIVE_NOTES_FILE=` grep ARCHIVE_NOTES_FILE arch.conf | cut -d '=' -f2 `
 else
-  DAILY_NOTES_FILE=daily_notes.txt
-  ARCHIVE_NOTES_FILE=archive_notes.txt
+  DAILY_NOTES_FILE=./daily_notes.txt
+  ARCHIVE_NOTES_FILE=./archive_notes.txt
 fi
 
 # file with last checksum of DAILY_NOTES_FILE
